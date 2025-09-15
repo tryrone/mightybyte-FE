@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "MightyByte YouTube App",
+    "slug": "mightybyte-youtube-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/snack-icon.png",
+    "userInterfaceStyle": "light",
+    "entryPoint": "./App.js",
+    "splash": {
+      "image": "./src/assets/snack-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mightybyte.youtubeapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/snack-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.mightybyte.youtubeapp"
+    },
+    "web": {
+      "favicon": "./src/assets/snack-icon.png"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1"
+          },
+          "android": {
+            "compileSdkVersion": 33,
+            "targetSdkVersion": 33,
+            "buildToolsVersion": "33.0.0"
+          }
+        }
+      ]
+    ]
+  }
+}

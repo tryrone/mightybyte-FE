@@ -104,8 +104,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
       >
         <Pressable
           onPress={onPress}
-          onHoverIn={handleHoverIn}
-          onHoverOut={handleHoverOut}
+          onPressIn={handleHoverIn}
+          onPressOut={handleHoverOut}
           style={styles.pressable}
         >
           {/* Main Card Content */}

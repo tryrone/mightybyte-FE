@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: "#030303",
-    outlineWidth: 0, // Remove web outline
   },
   searchButton: {
     width: 64,

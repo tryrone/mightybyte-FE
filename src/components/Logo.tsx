@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { StyleSheet, Image } from "react-native";
 
 const styles = StyleSheet.create({
@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const Logo = () => {
+const Logo: React.FC = () => {
   return (
     <Image style={styles.logo} source={require("../assets/snack-icon.png")} />
   );

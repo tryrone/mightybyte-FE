@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Header from "../components/Header";
 import VideoGrid from "../components/VideoGrid";
 
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Home = () => {
+const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("programming");
 
   const handleSearch = (query: string) => {
@@ -22,7 +22,6 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <Header onSearch={handleSearch} />
       <View style={styles.content}>
         <VideoGrid searchQuery={searchQuery} />
