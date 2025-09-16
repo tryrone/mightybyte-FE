@@ -11,6 +11,7 @@ import {
 import {YouTubeVideo} from '../types/youtube';
 import {searchVideos} from '../services/youtubeApi';
 import VideoCard from './VideoCard';
+import {usePlatform} from '../hooks';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -25,6 +26,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({searchQuery = 'programming'}) => {
   const [error, setError] = useState<string | null>(null);
   const [nextPageToken, setNextPageToken] = useState<string | undefined>();
   const [hasMore, setHasMore] = useState(true);
+  const {isWeb} = usePlatform();
 
   const loadVideos = useCallback(
     async (pageToken?: string, isRefresh = false) => {
@@ -92,14 +94,25 @@ const VideoGrid: React.FC<VideoGridProps> = ({searchQuery = 'programming'}) => {
   }, [searchQuery]);
 
   const renderVideoGrid = () => {
-    const cardsPerRow =
-      screenWidth > 1200
-        ? 4
-        : screenWidth > 800
-        ? 3
-        : screenWidth > 500
-        ? 2
-        : 1;
+    if (isWeb) {
+      return (
+        <View style={styles.webGridContainer}>
+          {videos.map(video => (
+            <VideoCard
+              key={video.id.videoId}
+              video={video}
+              onPress={() => {
+                // Handle video press - could open video player or navigate
+                console.log('Video pressed:', video.snippet.title);
+              }}
+            />
+          ))}
+        </View>
+      );
+    }
+
+    // Mobile fallback - use flexible layout
+    const cardsPerRow = screenWidth > 500 ? 2 : 1;
     const rows: YouTubeVideo[][] = [];
 
     for (let i = 0; i < videos.length; i += cardsPerRow) {
@@ -107,7 +120,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({searchQuery = 'programming'}) => {
     }
 
     return rows.map((row, rowIndex) => (
-      <View key={rowIndex} style={styles.row}>
+      <View key={rowIndex} style={styles.mobileRow}>
         {row.map(video => (
           <VideoCard
             key={video.id.videoId}
@@ -184,12 +197,21 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingVertical: 16,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
-  row: {
+  webGridContainer: {
+    display: 'grid' as any,
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: 16,
+    width: '100%',
+    justifyItems: 'stretch' as any,
+    alignItems: 'flex-start',
+  },
+  mobileRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 8,
+    justifyContent: 'space-around',
+    marginBottom: 12,
+    paddingHorizontal: 8,
   },
   errorContainer: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,28 +7,25 @@ import {
   Pressable,
   Animated,
   Dimensions,
-} from "react-native";
-import { YouTubeVideo } from "../types/youtube";
-import { formatPublishDate } from "../services/youtubeApi";
+} from 'react-native';
+import {YouTubeVideo} from '../types/youtube';
+import {formatPublishDate} from '../services/youtubeApi';
+import {usePlatform} from '../hooks';
 
 interface VideoCardProps {
   video: YouTubeVideo;
   onPress?: () => void;
 }
 
-const { width: screenWidth } = Dimensions.get("window");
-const CARD_MARGIN = 8;
-const CARDS_PER_ROW =
-  screenWidth > 1200 ? 4 : screenWidth > 800 ? 3 : screenWidth > 500 ? 2 : 1;
-const CARD_WIDTH =
-  (screenWidth - (CARDS_PER_ROW + 1) * CARD_MARGIN * 2) / CARDS_PER_ROW;
+// Remove dynamic width calculations - let CSS Grid handle sizing
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
+const VideoCard: React.FC<VideoCardProps> = ({video, onPress}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const popupOpacity = useRef(new Animated.Value(0)).current;
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const {isWeb} = usePlatform();
 
   const handleHoverIn = () => {
     setIsHovered(true);
@@ -93,25 +90,22 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
 
   const truncateText = (text: string, maxLength: number) => {
     return text.length > maxLength
-      ? text.substring(0, maxLength) + "..."
+      ? text.substring(0, maxLength) + '...'
       : text;
   };
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[styles.card, { transform: [{ scale: scaleAnim }] }]}
-      >
+    <View style={[styles.container, isWeb && styles.webContainer]}>
+      <Animated.View style={[styles.card, {transform: [{scale: scaleAnim}]}]}>
         <Pressable
           onPress={onPress}
           onPressIn={handleHoverIn}
           onPressOut={handleHoverOut}
-          style={styles.pressable}
-        >
+          style={styles.pressable}>
           {/* Main Card Content */}
           <View style={styles.thumbnailContainer}>
             <Image
-              source={{ uri: video.snippet.thumbnails.medium.url }}
+              source={{uri: video.snippet.thumbnails.medium.url}}
               style={styles.thumbnail}
               resizeMode="cover"
             />
@@ -140,11 +134,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
                 {
                   opacity: popupOpacity,
                 },
-              ]}
-            >
+              ]}>
               <View style={styles.popupContent}>
                 <Image
-                  source={{ uri: video.snippet.thumbnails.high.url }}
+                  source={{uri: video.snippet.thumbnails.high.url}}
                   style={styles.popupThumbnail}
                   resizeMode="cover"
                 />
@@ -173,74 +166,78 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: CARD_WIDTH,
-    margin: CARD_MARGIN,
+    width: '100%',
+    margin: 0, // Grid handles spacing
+  },
+  webContainer: {
+    minWidth: 280,
+    maxWidth: 360,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 8,
-    overflow: "hidden",
+    overflow: 'hidden',
     elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   pressable: {
-    position: "relative",
+    position: 'relative',
   },
   thumbnailContainer: {
-    position: "relative",
-    width: "100%",
+    position: 'relative',
+    width: '100%',
     aspectRatio: 16 / 9,
   },
   thumbnail: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   duration: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 8,
     right: 8,
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
   },
   durationText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 12,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   videoInfo: {
     padding: 12,
   },
   title: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#0f0f0f",
+    fontWeight: '600',
+    color: '#0f0f0f',
     lineHeight: 20,
     marginBottom: 4,
   },
   channelName: {
     fontSize: 13,
-    color: "#606060",
+    color: '#606060',
     marginBottom: 2,
   },
   publishDate: {
     fontSize: 13,
-    color: "#606060",
+    color: '#606060',
   },
   popup: {
-    position: "absolute",
+    position: 'absolute',
     top: -20,
     left: -20,
     right: -20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.25,
     shadowRadius: 12,
     zIndex: 1000,
@@ -251,7 +248,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   popupThumbnail: {
-    width: "100%",
+    width: '100%',
     aspectRatio: 16 / 9,
     borderRadius: 8,
     marginBottom: 12,
@@ -261,24 +258,24 @@ const styles = StyleSheet.create({
   },
   popupTitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#0f0f0f",
+    fontWeight: '600',
+    color: '#0f0f0f',
     lineHeight: 22,
   },
   popupChannel: {
     fontSize: 14,
-    color: "#606060",
-    fontWeight: "500",
+    color: '#606060',
+    fontWeight: '500',
   },
   popupDescription: {
     fontSize: 13,
-    color: "#606060",
+    color: '#606060',
     lineHeight: 18,
     marginTop: 4,
   },
   popupDate: {
     fontSize: 12,
-    color: "#909090",
+    color: '#909090',
     marginTop: 4,
   },
 });
