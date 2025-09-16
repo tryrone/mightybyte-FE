@@ -14,8 +14,6 @@ export const searchVideos = async ({
   maxResults = 25,
   pageToken,
 }: SearchVideosParams = {}): Promise<YouTubeSearchResponse> => {
-  console.log('API_KEY check:', API_KEY ? 'Found' : 'Not found');
-
   if (!API_KEY) {
     throw new Error(
       'YouTube API key is not configured. Please set YOUTUBE_API_KEY or REACT_APP_YOUTUBE_API_KEY in your .env file.',
